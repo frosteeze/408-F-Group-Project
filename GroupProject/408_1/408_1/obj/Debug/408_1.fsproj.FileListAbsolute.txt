@@ -1,0 +1,13 @@
+C:\Users\Ashe\Desktop\408\GroupProject\408_1\408_1\bin\Debug\_408_1.exe.config
+C:\Users\Ashe\Desktop\408\GroupProject\408_1\408_1\bin\Debug\_408_1.XML
+C:\Users\Ashe\Desktop\408\GroupProject\408_1\408_1\bin\Debug\_408_1.exe
+C:\Users\Ashe\Desktop\408\GroupProject\408_1\408_1\bin\Debug\_408_1.pdb
+C:\Users\Ashe\Desktop\408\GroupProject\408_1\408_1\bin\Debug\FSharp.Core.dll
+C:\Users\Ashe\Desktop\408\GroupProject\408_1\408_1\bin\Debug\FSharp.Core.xml
+C:\Users\Ashe\Desktop\408\GroupProject\408_1\408_1\obj\Debug\_408_1.exe
+C:\Users\Ashe\Desktop\408\GroupProject\408_1\408_1\obj\Debug\_408_1.pdb
+C:\Users\Ashe\Desktop\408\GroupProject\408_1\408_1\bin\Debug\FSharp.Data.dll
+C:\Users\Ashe\Desktop\408\GroupProject\408_1\408_1\bin\Debug\policy.2.3.FSharp.Core.dll
+C:\Users\Ashe\Desktop\408\GroupProject\408_1\408_1\bin\Debug\FSharp.Data.pdb
+C:\Users\Ashe\Desktop\408\GroupProject\408_1\408_1\bin\Debug\FSharp.Data.xml
+C:\Users\Ashe\Desktop\408\GroupProject\408_1\408_1\bin\Debug\pub.config
