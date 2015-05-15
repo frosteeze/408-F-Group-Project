@@ -38,7 +38,7 @@ module Client =
 
 
 
-            Button [Text "Click auto"]
+            Button [Text "\"Parse Json\""]
             |>! OnClick (fun _ _ ->
                 auto input.Value (fun out ->
                     label4.Text <- out))
