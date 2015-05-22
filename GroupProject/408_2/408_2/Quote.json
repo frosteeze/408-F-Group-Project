@@ -1,0 +1,25 @@
+﻿{
+ "query": {
+  "count": 1,
+  "created": "2015-05-04T00:23:41Z",
+  "lang": "en-US",
+  "results": {
+   "quote": {
+    "symbol": "MSFT",
+    "AverageDailyVolume": "37960200",
+    "Change": "+0.015",
+    "DaysLow": "48.400",
+    "DaysHigh": "48.875",
+    "YearLow": "38.510",
+    "YearHigh": "50.050",
+    "MarketCapitalization": "399.16B",
+    "LastTradePriceOnly": "48.655",
+    "DaysRange": "48.400 - 48.875",
+    "Name": "Microsoft Corporation",
+    "Symbol": "MSFT",
+    "Volume": "38937336",
+    "StockExchange": "NMS"
+   }
+  }
+ }
+}

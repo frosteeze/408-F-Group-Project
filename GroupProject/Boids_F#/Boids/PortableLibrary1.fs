@@ -69,6 +69,18 @@ type Vector(x : float, y : float) =
         if y > float s then 
             this.Y <- float s     //C++/Java equivalent this.Y.set(s)
 
+    member this.normalize() = 
+            this.Y <- 0.0
+        
+
+    //Static members are considered a "class function" meaning that they do not require
+    //An instance of the class to run 
+    static member add(v1 : Vector, v2 : Vector) =   //C++/Java equivalent Vector.add(vector1, vector2)
+        Vector(v1.X + v2.X, v1.Y + v2.Y)
+
+    static member sub(v1 : Vector, v2 : Vector) =   //C++/Java equivalent Vector.sub(vector1, vector2)
+        Vector(v1.X - v2.X, v1.Y - v2.Y)
+
 
 // The Flock (a list of Boid objects)
 
@@ -91,7 +103,7 @@ type Boid (x : float, y: float) =
     member this.maxspeed = 2
     member this.maxforce = 0.03 
     member this.velocity = Vector(cos(random(3.14)), sin(random(3.14)))
-    member this.acceleration = Vector(0 , 0)
+    member this.acceleration = Vector(0.0 , 0.0)
 
     member this.run(boids : ArrayList<Boid> ) =
         this.flock(boids)
@@ -109,10 +121,11 @@ type Boid (x : float, y: float) =
 
       // We accumulate a new acceleration each time based on three rules
     member this.flock(ArrayList<Boid> boids) =
+       //May have to just do calls and do the applyForce after the completion of each function
         //Declaring private mutable variables
-        let mutable sep = this.separate(boids)   // Separation
-        let mutable ali = this.align(boids)     // Alignment
-        let mutable coh = this.cohesion(boids)   // Cohesion
+        let mutable sep = this.separate(boids)    // Separation
+        let mutable ali = this.align(boids)   // Alignment
+        let mutable coh = this.cohesion(boids)  // Cohesion
         // Arbitrarily weight these forces
         sep.mult(1.5 : double);
         ali.mult(1.0);
@@ -136,10 +149,10 @@ type Boid (x : float, y: float) =
     // A method that calculates and applies a steering force towards a target
     // STEER = DESIRED MINUS VELOCITY
     member this.seek(target : Vector) =
-        let desired = Vector.sub(target, location);  // A vector pointing from the location to the target
+        let desired = Vector.sub(target, this.location)  // A vector pointing from the location to the target
         // Scale to maximum speed
-        desired.normalize();
-        desired.mult(maxspeed);
+        desired.normalize()
+        desired.mult(maxspeed)
 
         // Above two lines of code below could be condensed with new PVector setMag() method
         // Not using this method until Processing.js catches up
@@ -196,7 +209,7 @@ type Boid (x : float, y: float) =
 
         // Average -- divide by how many
         if (count > 0) then
-            steer.div((float)count);
+            steer.div((float)count)
         
 
         // As long as the vector is greater than 0
