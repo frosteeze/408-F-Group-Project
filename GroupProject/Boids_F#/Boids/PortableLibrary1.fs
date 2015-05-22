@@ -1,5 +1,6 @@
 ﻿namespace Boids
 
+
 //TODO:  Create arraylist like object
 //USING: https://processing.org/examples/flocking.html
 
@@ -29,43 +30,57 @@ void mousePressed() {
 *)
 
 type Vector(x : float, y : float) =
-    member  this.X = x
-    member  this.Y = y
+    //We have the X and Y values be private mutables
+    let mutable XValue = x      //C++/Java equivalent private float X
+    let mutable YValue = y      //C++/Java equivalent private float Y
+    
+    //In order to modify the variables we need to use with get() and set()
+    member this.X                                
+        with get() = XValue                //C++/Java equivalent vector.X.get()
+        and set(value) = XValue <- value   //C++/Java equivalent vector.X.set(float)
 
-    member this.add(v : Vector) =
+    member this.Y
+        with get() = YValue                //C++/Java equivalent vector.Y.get()
+        and set(value) = YValue <- value   //C++/Java equivalent vector.Y.set(float)
+
+    //Public add/sub/limit functions
+    member this.add(v : Vector) =          //C++/Java equivalent vector.add(vector2)
          Vector(x + v.X, y + v.Y)
     
-    member this.sub(v : Vector) =
+    member this.sub(v : Vector) =          //C++/Java equivalent vector.sub(vector2)
          Vector(x - v.X, y - v.Y)
 
     member this.sub(first : Vector, second : Vector) =
          Vector(first.X - second.X, first.Y - second.Y)
 
-    member this.mult(s : int) = 
+    member this.mult(s : int) =  //C++/Java equivalent vector.mult(int)
          Vector(x * float s, y * float s)
 
-    member this.mult(s : double) = 
+    member this.mult(s : double) =  //C++/Java equivalent vector.mult(double)
          Vector(x * s, y * s)
     
-    //Need to check to see if this is possible
-    member this.limit(s : int) = 
-        if x > float s then 
-            this.X <- float s
-        if y > float s then this.Y = float s
+    member this.mult(s : float) =  //C++/Java equivalent vector.mult(float)
+         Vector(x * s, y * s)
 
+    //We can use the assignment ( <- )as we have defined the get and set previously
+    member this.limit(s : int) =    //C++/Java equivalent vector.limit(int)
+        if this.X > float s then    
+             this.X <- float s     //C++/Java equivalent this.X.set(s)
+        if y > float s then 
+            this.Y <- float s     //C++/Java equivalent this.Y.set(s)
 
 
 // The Flock (a list of Boid objects)
 
 type Flock () = 
-  member this.Boids = ArrayList<Boid> boids; // An ArrayList for all the boids
+    member this.Boids = ArrayList<Boid> boids; // An ArrayList for all the boids
 
-  member this.run() =
-      for Boid b : Boids
-          b.run(boids);  // Passing the entire list of boids to each boid individually
+    member this.run() =
+        for Boid b in Boids
+            do b.run Boids  // Passing the entire list of boids to each boid individually
 
-  member this.addBoid(b : boid) {
-      Boids.add(b);
+    member this.addBoid(b : boid)
+        Boids.add(b)
 
 // The Boid class
 
@@ -94,11 +109,12 @@ type Boid (x : float, y: float) =
 
       // We accumulate a new acceleration each time based on three rules
     member this.flock(ArrayList<Boid> boids) =
-        let sep = separate(boids)   // Separation
-        let ali = align(boids)     // Alignment
-        let coh = cohesion(boids)   // Cohesion
+        //Declaring private mutable variables
+        let mutable sep = this.separate(boids)   // Separation
+        let mutable ali = this.align(boids)     // Alignment
+        let mutable coh = this.cohesion(boids)   // Cohesion
         // Arbitrarily weight these forces
-        sep.mult(1.5);
+        sep.mult(1.5 : double);
         ali.mult(1.0);
         coh.mult(1.0);
         // Add the force vectors to acceleration
@@ -166,61 +182,60 @@ type Boid (x : float, y: float) =
         let steer = new Vector(0, 0, 0);
         let count = 0;
         // For every boid in the system, check if it's too close
-        for (Boid other : boids) 
-            let d = Vector.dist(location, other.location);
+        for other in boids do
+            double d = Vector.dist(location, other.location)
             // If the distance is greater than 0 and less than an arbitrary amount (0 when you are yourself)
-            if ((d > 0) && (d < desiredseparation)) 
+            if ((d > 0) && (d < desiredseparation)) then
                 // Calculate vector pointing away from neighbor
-                let diff = Vector.sub(location, other.location);
-                diff.normalize();
-                diff.div(d);        // Weight by distance
-                steer.add(diff);
-                count++;            // Keep track of how many
+                let diff = Vector.sub(location, other.location)
+                diff.normalize()
+                diff.div(d)      // Weight by distance
+                steer.add(diff)
+                count++            // Keep track of how many
 
 
         // Average -- divide by how many
-        if (count > 0) 
+        if (count > 0) then
             steer.div((float)count);
         
 
         // As long as the vector is greater than 0
-        if (steer.mag() > 0) 
+        if (steer.mag() > 0) then
           // First two lines of code below could be condensed with new PVector setMag() method
           // Not using this method until Processing.js catches up
           // steer.setMag(maxspeed);
 
           // Implement Reynolds: Steering = Desired - Velocity
-          steer.normalize();
-          steer.mult(maxspeed);
-          steer.sub(velocity);
-          steer.limit(maxforce);
+          steer.normalize() 
+          steer.mult(maxspeed)
+          steer.sub(velocity)
+          steer.limit(maxforce)
         
         steer
 
     // Alignment
     // For every nearby boid in the system, calculate the average velocity
     member this.align (ArrayList<Boid> boids) =
-        member this.neighbordist = 50
-        member this.sum = Vector(0, 0)
+        int this.neighbordist = 50
+        Vector this.sum = Vector(0, 0)
         let mutable this.count = 0
-        for (Boid other : boids) 
-            float d = Vector.dist(location, other.location);
-            if ((d > 0) && (d < neighbordist)) 
-                sum.add(other.velocity);
-                this.count++;
+        for Boid other in boids do
+            float d = Vector.dist(this.location, other.location);
+            if ((d > 0) && (d < neighbordist)) then
+                sum.add(other.velocity)
+                this.count++
 
 
         if count > 0 then
-          sum.div((float)count);
+          sum.div((float)count)
           // First two lines of code below could be condensed with new PVector setMag() method
           // Not using this method until Processing.js catches up
           // sum.setMag(maxspeed);
-
           // Implement Reynolds: Steering = Desired - Velocity
-          sum.normalize();
-          sum.mult(maxspeed);
-          let steer = Vector.sub(sum, velocity);
-          steer.limit(maxforce);
+          sum.normalize()
+          sum.mult(maxspeed)
+          Vector steer = Vector.sub(sum, velocity)
+          steer.limit(maxforce)
 
         else 
           Vector(0, 0);
@@ -229,18 +244,18 @@ type Boid (x : float, y: float) =
     // Cohesion
     // For the average location (i.e. center) of all nearby boids, calculate steering vector towards that location
     member this.cohesion (ArrayList<Boid> boids) 
-        float neighbordist = 50;
-        let sum = new Vector(0, 0);   // Start with empty vector to accumulate all locations
+        float neighbordist = 50
+        let sum = new Vector(0, 0)   // Start with empty vector to accumulate all locations
         let count = 0;
-        for (Boid other : boids) 
+        for other in boids do
             float d = PVector.dist(location, other.location);
-            if ((d > 0) && (d < neighbordist)) {
-            sum.add(other.location); // Add location
-            count++;
+            if ((d > 0) && (d < neighbordist)) then
+                sum.add(other.location) // Add location
+                count++
 
         if (count > 0) then
-            sum.div(count);
-            seek(sum);  // Steer towards the location
+            sum.div(count)
+            seek(sum)  // Steer towards the location
 
         else 
-            Vector(0, 0);
+            Vector(0, 0)
